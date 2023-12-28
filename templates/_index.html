@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>U.S. Taxicab Profit Forecasting</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/rSlider.min.css') }}">
+	</head>
+	<body>
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+
+					<div class="row" id="header">
+						<div class="col">
+							<h1>U.S. Taxicab Profit Forecasting</h1>
+						</div>
+					</div>
+
+					<div class="row" id="form">
+						<div class="col">
+							<form name="forecast-form" action="{{ url_for('predict') }}" method="POST">
+							  <div class="mb-3">
+							    <label class="form-label"><h4>Select Company:</h4></label>
+							    <br/>
+
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" name="company" id="yellow" value="Yellow Cab" checked>
+								  <label class="form-check-label" for="yellow">Yellow Cab</label>
+								</div>
+
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" name="company" id="pink" value="Pink Cab">
+								  <label class="form-check-label" for="pink">Pink Cab</label>
+								</div>
+
+							  </div>
+							  <div class="mb-3">
+							    <label for="days" class="form-label"><h4>Select Forecast Days:</h4></label>
+							    <div class="slider-container">
+							    	<input type="text" id="days" class="slider" name="days" value="" />
+							    </div>
+							  </div>
+							  <br/>
+							  <button type="button" id="btn-submit" onclick="printLoading()" class="btn btn-primary">Forecast</button>
+							</form>
+						</div>
+					</div>
+
+					<div class="row" id="result">
+						<div class="col">
+
+							<div class="row">
+								<div class="col">
+
+									{{ profit_line_html | safe }}
+									
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col">
+
+									{{ profit_per_city_line_html | safe }}
+									
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col">
+
+									{{ profit_per_city_pie_html | safe }}
+									
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+	    <script src="{{ url_for('static', filename='js/rSlider.min.js') }}"></script>
+	    <script>
+	        (function () {
+	            'use strict';
+
+	            var init = function () {                
+
+	                var daysslider = new rSlider({
+	                    target: '#days',
+	                    values: [1, 7, 15, 30, 45, 60, 75, 90, 105, 120],
+	                    range: false,
+	                    set: [30],
+	                    tooltip: false,
+	                    onChange: function (vals) {
+	                        var slider = document.getElementById('days');
+	                        slider.value = vals;
+	                        console.log(slider.value);
+	                    }
+	                });
+	            };
+	            window.onload = init;
+	        })();
+			
+			function printLoading() {
+				document.getElementById('btn-submit').innerHTML = 'Loading ...';
+				document.getElementById('btn-submit').setAttribute('disabled', 'disabled');
+				document.forms['forecast-form'].submit();
+			}
+			
+	    </script>
+	</body>
+</html>
